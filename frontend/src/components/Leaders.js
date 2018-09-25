@@ -1,13 +1,18 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
+import {Redirect} from 'react-router-dom'
 
 
 
-class Leaders extends Component {
+function Leaders(props) {
 
-    render() {
- 
-    const {usersArr, users} = this.props;
+    const { authedUser } = props
+
+    if(!authedUser) {
+      return <Redirect to="/login"/>
+    }
+
+    const {usersArr, users} = props;
 
     const UI = users ? 
         <div className="col-lg-5" style={{margin: "28px 0"}}>
@@ -43,15 +48,14 @@ class Leaders extends Component {
             </div>
         </div> : null;
     return UI;
-    }
 }
 
-function mapStateToProps({users, app}){
+function mapStateToProps({users, authedUser}){
 
     return { 
         usersArr: Object.keys(users)
         .sort((a,b) => (users[b].questions.length + (Object.keys(users[b].answers)).length) - (users[a].questions.length + (Object.keys(users[a].answers)).length)), 
-        users, app }
+        users, authedUser }
 }
 
 export default connect(mapStateToProps)(Leaders);

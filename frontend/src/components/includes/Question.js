@@ -1,14 +1,12 @@
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 
 
-class Question extends Component {
+function Question(props) {
 
-
-    render(){
-        const {obj, users} = this.props;
-        console.log(obj, users)
+        const {obj, users} = props;
         const UI = obj && users ? 
         <div style={{ textAlign: "center", marginBottom: 12}}>
             <h3 style={{padding:"28px 0", textAlign:"center",background:"#ffffff",borderRadius: "12px 12px 0 0", fontSize: 16, fontWeight: 600,
@@ -29,12 +27,11 @@ class Question extends Component {
                 {obj.optionTwo.text}
             </p>
 
-            <a href={`/questions/${obj.id}`} className="btn btn-outline-primary">View Poll</a>
+            <Link to={`/questions/${obj.id}`} className="btn btn-outline-primary">View Poll</Link>
             </div>
         </div> : null
 
         return UI;
-    }
 }
 
 function mapStateToProps({users}, ownProps){

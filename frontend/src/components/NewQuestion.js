@@ -10,7 +10,7 @@ class NewQuestion extends Component {
     state = {
         optionOne: "",
         optionTwo: "",
-        toHome: false
+        toHome: false,
     }
 
     handleChange = (e) => {
@@ -50,9 +50,14 @@ class NewQuestion extends Component {
     render() {
 
         const { optionOne, optionTwo, toHome } = this.state
+        const { authedUser } = this.props
 
         if(toHome) {
             return <Redirect to="/"/>
+        }
+
+        if(!authedUser) {
+            return <Redirect to="/login"/>
         }
  
     return (
@@ -62,7 +67,7 @@ class NewQuestion extends Component {
                     WOULD YOU RATHER...
             </h3>
             <div style={{background:"#ffffff",borderRadius: "0 0 12px 12px", padding: "20px 40px", paddingBottom:40}}>
-                <form method="post" onSubmit={this.handleSave}>
+                <form onSubmit={this.handleSave}>
                     <div className="form-group">
                         <input type="text" name="optionOne" value={optionOne} className="form-control" onChange={this.handleChange} required/>
                     </div>

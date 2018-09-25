@@ -1,17 +1,42 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import NotFound from './NotFound'
+import Vote from './Vote'
+import { saveAnswer } from '../actions/thunk-actions'
+import {Redirect} from 'react-router-dom'
+
 
 
 
 
 class Poll extends Component {
 
-    componentDidMount() {
-        // const {match} = this.props
-        // const id = match.params.question_id
-        // console.log(this.props)
+    state = {
+        quest: '',
+        toHome: false
+    }
 
+    handleSelect = (e) => {
+        this.setState({
+            quest: e.target.value
+        })
+    }
+
+    handleSave = (e) => {
+        const {dispatch, authUser, match} = this.props
+        const {quest} = this.state
+        const id = match.params.question_id
+
+        let ansObj = {
+            authedUser: {...authUser},
+            qid: id,
+            answer: quest
+        }
+        e.preventDefault()
+        dispatch(saveAnswer(ansObj))
+
+        this.setState({
+            toHome: true
+        })
     }
 
     formatText(text) {
@@ -22,7 +47,7 @@ class Poll extends Component {
     }
     calcPercentage(value, upperlim){
         let per = (value/upperlim) * 100
-        return `(${per}%)`
+        return `(${Math.round(per)}%)`
     }
 
     yourVote(question_id,authUser){
@@ -31,24 +56,30 @@ class Poll extends Component {
         return vote;
     }
 
-    makeVote(){
-        return <div className='btn-outline-primary'>Your vote</div>
-    }
-
     render() {
-        const {match, questions, users, authUser, loadingBar} = this.props
+        const {match, questions, users, authUser, loadingBar, authedUser} = this.props
         const id = match.params.question_id
 
         const quest = questions[id] ? questions[id] : null
         const optionOneCount = quest ? quest.optionOne.votes.length : null
         const optionTwoCount = quest ? quest.optionTwo.votes.length : null
+        const optionOneText = quest ? quest.optionOne.text : null
+        const optionTwoText = quest ? quest.optionTwo.text : null
         const totalCount = optionOneCount + optionTwoCount
+
+        if(!authedUser) {
+            return <Redirect to="/login"/>
+        }
+
+        const author = users[quest.author] ? users[quest.author] : {}
 
         if(loadingBar.default){
             return null
         }
 
-        const UI = quest ? 
+        
+
+        const UI = ( quest && this.yourVote(id,authUser)) ?
         <div className="col-lg-5" style={{margin: "28px 0"}}>
         <h3 style={{padding:"28px 0", textAlign:"center",background:"#ffffff",borderRadius: "12px 12px 0 0", fontSize: 16, fontWeight: 600,
             margin: 0, borderBottom: "2px solid #d7d4d4"}}>
@@ -56,11 +87,6 @@ class Poll extends Component {
             </h3>
             <div style={{background:"#ffffff",borderRadius: "0 0 12px 12px",textAlign: "left", padding: "20px 40px", paddingBottom:40}}>                
                 <h3>Results</h3>
-
-                {/* <div className={(this.yourVote(id,authUser) === 'optionTwo') ? 'your-choice' : ''}>
-                    <p style={{ fontSize: '1.6rem', margin: 0}}>2. {this.formatText(quest.optionTwo.text)}</p>
-                    <p>{this.formatVotes(optionTwoCount,totalCount)} {this.calcPercentage(optionTwoCount,totalCount)}</p>
-                </div> */}
 
                 <div className='row' style={{paddingBottom: 40}}>
                     <div className="col-lg-2">
@@ -78,15 +104,17 @@ class Poll extends Component {
                                 <p style={{ fontSize: '1.6rem', margin: 0}} className={(this.yourVote(id,authUser) === 'optionTwo') ? 'your-choice' : ''}>2. {this.formatText(quest.optionTwo.text)}</p>
                             </div>
                             <div className="col-lg-4">
-                                <p>{this.formatVotes(optionOneCount,totalCount)} {this.calcPercentage(optionTwoCount,totalCount)}</p>
+                                <p>{this.formatVotes(optionTwoCount,totalCount)} {this.calcPercentage(optionTwoCount,totalCount)}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                { !this.yourVote(id,authUser) ? <a href={`/vote/${id}`}>Cast Vote</a> : null}
             </div>
-        </div> : <NotFound />
-
+        </div> : <Vote  handleSave={this.handleSave} 
+                        handleSelect={this.handleSelect} 
+                        optionOneText={optionOneText} 
+                        optionTwoText={optionTwoText}
+                        author={author}/>
         return UI;
     }
 }
@@ -94,6 +122,7 @@ class Poll extends Component {
 function mapStateToProps({questions, authedUser, users, loadingBar}){
     const authUser = authedUser
     return { 
+        authedUser,
         loadingBar,
         questionsArr: Object.keys(questions)
         .sort((a,b) => questions[b].timestamp - questions[a].timestamp), 

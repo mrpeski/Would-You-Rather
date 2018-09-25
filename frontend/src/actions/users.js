@@ -8,9 +8,8 @@ export function receiveUsers(users){
     }
 }
 
-export function logout(user){
+export function logout(){
     return {
         type: LOGOUT,
-        user
     }
 }

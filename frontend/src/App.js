@@ -10,9 +10,7 @@ import Home from './components/Home'
 import Nav from './components/includes/Nav'
 import LoadingBar from 'react-redux-loading'
 import Poll from './components/Poll'
-import Vote from './components/Vote'
 import NotFound from './components/NotFound'
-
 
 class App extends Component {
 
@@ -22,22 +20,23 @@ class App extends Component {
       if(users) {
         this.props.dispatch(getInitialData())
       }
+
   }
   
   render() {
+
+    
     return (
       <React.Fragment>
         <div className="container-fluid" style={{padding:"0 10px", paddingBottom:40, marginBottom:40, background: "#007bff"}}>
-            <LoadingBar />
             <Nav />
-            
+            <LoadingBar />
             <div className="row justify-content-center">
               <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/add" exact component={NewQuestion} />
                 <Route path="/login" exact render={() => (<Login />)} />
                 <Route path="/questions/:question_id" exact component={Poll} />
-                <Route path="/vote/:question_id" exact component={Vote} />
                 <Route path="/leaderboard" exact render={() => (<Leaders />)} />
                 <Route component={NotFound} />
               </Switch>
@@ -49,7 +48,7 @@ class App extends Component {
 }
 
 
-function mapStateToProps({questions, app, authedUser, users}){
+function mapStateToProps({questions, authedUser, users}){
   const authUser = authedUser
   return { 
       authUser: users[authUser],

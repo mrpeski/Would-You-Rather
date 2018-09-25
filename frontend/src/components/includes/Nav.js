@@ -1,9 +1,16 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-// import {Route, Link, NavLink} from 'react-router-dom'
+import {Link} from 'react-router-dom'
+import { logout } from '../../actions/users'
 
 class Nav extends Component {
+
+    logout = (e) => {
+        e.preventDefault()
+        const { dispatch } = this.props
+        dispatch(logout())
+    }
 
     render(){
         const {users, authedUser} = this.props;
@@ -11,32 +18,34 @@ class Nav extends Component {
 
         const UI = 
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-                <a className="navbar-brand" href="/">Would You Rather</a>
+                <Link className="navbar-brand" to="/">Would You Rather</Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className="nav-link" href="/">Home</a>
+                            <Link className="nav-link" to="/">Home</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/add">New Question</a>
+                            <Link className="nav-link" to="/add">New Question</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/leaderboard">Leaders</a>
+                            <Link className="nav-link" to="/leaderboard">Leaders</Link>
                         </li>
                     </ul>
                 </div>
                 <div className="navbar-right" id="navbarNav">
                     <ul className="navbar-nav">
                         <span className="navbar-text">
-                            Hello, {activeUser.name }
+                        { activeUser.name  ? `Hello, ${activeUser.name}` : null }
                             <img src={activeUser.avatarURL} alt={activeUser.name}  style={{ maxWidth: 20, borderRadius: 30, marginLeft: 12}}/>
                         </span>
-                        <li className="nav-item">
-                            <a className="nav-link" href="/login">{ users[authedUser] ? 'Logout' : 'Login'}</a>
-                        </li>
+                        { activeUser.name  ?
+                        <li className="nav-item" style={{ marginLeft: 15}}>
+                            <button className="btn btn-success" onClick={this.logout}>Logout</button>
+                        </li> : null
+                        }
                     </ul>
                 </div>
             </nav>

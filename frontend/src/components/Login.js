@@ -21,7 +21,6 @@ class Login extends Component {
     }
 
     handleChange = (e) => {
-        e.preventDefault()
         this.setState({
             value: e.target.value
         })
@@ -31,7 +30,7 @@ class Login extends Component {
         const {dispatch} = this.props;
         let { value } = this.state;
 
-        e.preventDefault()
+        // e.preventDefault()
         dispatch(authedUser(value))
 
         this.setState(() => ({
@@ -52,7 +51,6 @@ class Login extends Component {
     }
 
     if(toHome) {
-        console.log(toHome)
         // return window.location = '/'
         return <Redirect to="/" />
     }
@@ -64,7 +62,7 @@ class Login extends Component {
                     LOGIN AS
             </h3>
             <div style={{background:"#ffffff",borderRadius: "0 0 12px 12px", padding: "20px 40px", paddingBottom:40}}>
-                <form action="/login" method="post" onSubmit={this.handleLogin}>
+                <form onSubmit={this.handleLogin}>
                     <div className="form-group">
                     <select type="text" className="form-control" 
                             onChange={this.handleChange}

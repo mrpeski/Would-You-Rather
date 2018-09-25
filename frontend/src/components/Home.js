@@ -1,18 +1,23 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import Question from './includes/Question'
 import { withRouter } from 'react-router-dom'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import 'react-tabs/style/react-tabs.css';
+import 'react-tabs/style/react-tabs.css'
+import {Redirect} from 'react-router-dom'
 
 
 
-class Home extends Component {
 
+function Home(props){
 
-    render() {
-        
-    let {questionsArr, authUser, questions, users} = this.props;
+    const { authedUser } = props
+
+    if(!authedUser) {
+      return <Redirect to="/login"/>
+    }
+
+    let {questionsArr, authUser, questions, users} = props;
 
     let answeredQuestions = authUser ? Object.keys(authUser.answers) : [];
     let unansweredQuestions = authUser ? questionsArr.filter(quest => !answeredQuestions.includes(quest)) : [];
@@ -39,7 +44,6 @@ class Home extends Component {
     </div> : null
 
     return UI;
-    }
 }
 
 function mapStateToProps({questions, authedUser, users}){

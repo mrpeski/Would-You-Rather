@@ -1,12 +1,10 @@
 import { reqData, handleSaveQuestionAnswer, handleSaveQuestion } from '../api'
 import { receiveUsers } from './users'
-import { authedUser } from './authUser'
 import { receiveQuestions, saveQuestion } from './questions'
 import { selectOptionOne, selectOptionTwo } from './questions'
 import { showLoading, hideLoading } from 'react-redux-loading'
 
 
-const AUTHED_ID = "sarahedo"
 
 export function getInitialData() {
     return (dispatch) => {
@@ -14,7 +12,6 @@ export function getInitialData() {
         dispatch(showLoading())
         return reqData().then(({users, questions}) => {
             dispatch(receiveUsers(users))
-            dispatch(authedUser(AUTHED_ID))
             dispatch(receiveQuestions(questions))
             dispatch(hideLoading())
         })
