@@ -11,18 +11,12 @@ import Nav from './components/includes/Nav'
 import LoadingBar from 'react-redux-loading'
 import Poll from './components/Poll'
 import NotFound from './components/NotFound'
+import PrivateRoute from './components/includes/PrivateRoute'
 
 class App extends Component {
 
   componentDidMount(){
-      const {users, match} = this.props
-
-      console.log(match)
-      
-      if(users) {
         this.props.dispatch(getInitialData())
-      }
-
   }
   
   render() {
@@ -36,11 +30,11 @@ class App extends Component {
             <div className="row justify-content-center">
               <Switch>
                 <Route path="/" exact component={Home} />
-                <Route path="/add" exact component={NewQuestion} />
+                <PrivateRoute path="/add" exact component={NewQuestion} />
                 <Route path="/login" exact render={() => (<Login />)} />
-                <Route path="/questions/:question_id" exact component={Poll} />
-                <Route path="/leaderboard" exact render={() => (<Leaders />)} />
-                <Route component={NotFound} />
+                <PrivateRoute path="/questions/:question_id" exact component={Poll} />
+                <PrivateRoute path="/leaderboard" exact component={Leaders} />
+                <PrivateRoute component={NotFound} />
               </Switch>
             </div>
         </div>

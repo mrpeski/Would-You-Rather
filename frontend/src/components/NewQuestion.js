@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { createQuestion } from '../actions/thunk-actions'
-import { setDest } from '../actions/setDest'
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom'
 
 
 
@@ -11,13 +10,7 @@ class NewQuestion extends Component {
     state = {
         optionOne: "",
         optionTwo: "",
-        toHome: false,
-    }
-
-    componentDidMount () {
-        const { match, dispatch } = this.props
-        console.log(match)
-        dispatch(setDest(match.url))
+        toHome: false
     }
 
     handleChange = (e) => {
@@ -40,9 +33,6 @@ class NewQuestion extends Component {
             author: authedUser
         }
 
-        // save Question
-        // console.log(optionOne,optionTwo)
-
         dispatch(createQuestion(quesObj))
 
         this.setState(() => ({
@@ -51,20 +41,14 @@ class NewQuestion extends Component {
             toHome: true
         }))
 
-        // redirect to home if submitted
     }
 
     render() {
 
         const { optionOne, optionTwo, toHome } = this.state
-        const { authedUser } = this.props
 
         if(toHome) {
-            return <Redirect to="/"/>
-        }
-
-        if(!authedUser) {
-            return <Redirect to="/login"/>
+            return <Redirect to="/" />
         }
  
     return (

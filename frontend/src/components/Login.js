@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {Redirect} from 'react-router-dom'
+import {Redirect, withRouter} from 'react-router-dom'
 import { authedUser } from '../actions/authUser'
 
 
@@ -10,7 +10,7 @@ class Login extends Component {
 
     state = {
         value: "",
-        toHome: false
+        doRedirect: false
     }
 
     componentDidMount () {
@@ -18,6 +18,12 @@ class Login extends Component {
         this.setState({
             value: authedUser ? authedUser : "sarahedo"
         })
+    }
+
+    redirectPath = () => {
+        const locationState = this.props.location.state;
+        const pathname = ( locationState && locationState.from && locationState.from.pathname );
+        return pathname || '/'
     }
 
     handleChange = (e) => {
@@ -30,11 +36,10 @@ class Login extends Component {
         const {dispatch} = this.props;
         let { value } = this.state;
 
-        // e.preventDefault()
         dispatch(authedUser(value))
 
         this.setState(() => ({
-            toHome: true
+            doRedirect: true
         }))
         
     }
@@ -42,7 +47,7 @@ class Login extends Component {
     render() {
  
     const {users} = this.props;
-    const { toHome } = this.state
+    const { doRedirect } = this.state
 
     let userArr = [];
 
@@ -50,9 +55,8 @@ class Login extends Component {
         userArr.push(users[user])
     }
 
-    if(toHome) {
-        // return window.location = '/'
-        return <Redirect to="/" />
+    if(doRedirect) {
+        return <Redirect to={this.redirectPath()} />
     }
 
     const UI = userArr ? 
@@ -84,9 +88,7 @@ class Login extends Component {
 }
 
 function mapStateToProps({users, authedUser}){
-    return { users, 
-        authedUser
-     }
+    return { users, authedUser }
 }
 
-export default connect(mapStateToProps)(Login);
+export default withRouter(connect(mapStateToProps)(Login));
