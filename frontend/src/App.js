@@ -15,8 +15,10 @@ import NotFound from './components/NotFound'
 class App extends Component {
 
   componentDidMount(){
-      const {users} = this.props
+      const {users, match} = this.props
 
+      console.log(match)
+      
       if(users) {
         this.props.dispatch(getInitialData())
       }

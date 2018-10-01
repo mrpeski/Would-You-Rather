@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { createQuestion } from '../actions/thunk-actions'
+import { setDest } from '../actions/setDest'
 import {Redirect} from 'react-router-dom';
 
 
@@ -11,6 +12,12 @@ class NewQuestion extends Component {
         optionOne: "",
         optionTwo: "",
         toHome: false,
+    }
+
+    componentDidMount () {
+        const { match, dispatch } = this.props
+        console.log(match)
+        dispatch(setDest(match.url))
     }
 
     handleChange = (e) => {
