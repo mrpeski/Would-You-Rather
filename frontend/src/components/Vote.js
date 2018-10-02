@@ -1,7 +1,18 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-export default function Vot(props) {
-    const {handleSave, handleSelect, optionOneText, optionTwoText, author } = props
+export default class Vote extends Component {
+
+    state = {
+        quesIn: ''
+    }
+
+    handleBtn = (e) => {
+        this.setState({ quesIn: e.target.value})
+    }
+
+    render() {
+        const { quesIn } = this.state
+        const {handleSave, handleSelect, optionOneText, optionTwoText, author } = this.props
     return (
         <div className="col-lg-5" style={{margin: "28px 0"}}>
             <h3 style={{padding:"28px 0", textAlign:"center",background:"#ffffff",borderRadius: "12px 12px 0 0", fontSize: 16, fontWeight: 600,
@@ -16,19 +27,21 @@ export default function Vot(props) {
                 </h4>
                     <div className="form-check form-check-inline">
                         <input type="radio" id="optionOne" name="quest" value='optionOne'  
-                        className="form-check-input" onChange={handleSelect}/>
+                        className="form-check-input" onChange={handleSelect} onClick={this.handleBtn}/>
                         <label className="form-check-label" htmlFor='optionOne'>{optionOneText}</label>
                     </div>
                     <h5 style={{ textAlign: "center"}}>OR</h5>
                     <div className="form-check form-check-inline">
-                        <input type="radio" name="quest" id="optionTwo" value='optionTwo' className="form-check-input" onChange={handleSelect}/>
+                        <input type="radio" name="quest" id="optionTwo" value='optionTwo' className="form-check-input" onChange={handleSelect} onClick={this.handleBtn}/>
                         <label className="form-check-label" htmlFor='optionTwo'>{optionTwoText}</label>
                     </div>
                     <div className="col-lg-12" style={{display:"flex",justifyContent:"center",padding:20}}>
-                        <button type="submit" className="btn btn-primary btn-lg">Submit</button>
+                        <button type="submit" className="btn btn-primary btn-lg" disabled={quesIn === ''}>Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     )
+    }
+    
 }

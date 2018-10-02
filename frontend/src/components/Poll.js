@@ -57,19 +57,23 @@ class Poll extends Component {
     }
 
     render() {
-        const {match, questions, users, authUser, loadingBar, authedUser} = this.props
+        const {match, questions, users, authUser, loadingBar} = this.props
         const id = match.params.question_id
 
         const quest = questions[id] ? questions[id] : null
+
+        if (quest === null) {
+            return <Redirect to="/error" />
+        }
         const optionOneCount = quest ? quest.optionOne.votes.length : null
         const optionTwoCount = quest ? quest.optionTwo.votes.length : null
         const optionOneText = quest ? quest.optionOne.text : null
         const optionTwoText = quest ? quest.optionTwo.text : null
         const totalCount = optionOneCount + optionTwoCount
 
-        if(!authedUser) {
-            return <Redirect to="/login"/>
-        }
+        // if(!authedUser) {
+        //     return <Redirect to="/login"/>
+        // }
 
         const author = users[quest.author] ? users[quest.author] : {}
 

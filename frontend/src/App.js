@@ -34,7 +34,7 @@ class App extends Component {
                 <Route path="/login" exact render={() => (<Login />)} />
                 <PrivateRoute path="/questions/:question_id" exact component={Poll} />
                 <PrivateRoute path="/leaderboard" exact component={Leaders} />
-                <PrivateRoute component={NotFound} />
+                <Route component={NotFound} />
               </Switch>
             </div>
         </div>
